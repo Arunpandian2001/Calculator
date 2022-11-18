@@ -1,0 +1,201 @@
+<!DOCtype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Calculator</title>
+<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+	<div class="page">
+		<div class="container">
+			<div class="display">
+				<input type="text" placeholder="0" readonly id="show" name="show">
+
+			</div>
+
+
+			<div class="col">
+				<input type="button" id="clear" onclick="(clearAll())" value="AC">
+				
+				<div class="col1">
+				<input type="button" class="number" onclick="(display('9'))" value="9">
+				<input type="button" class="number" onclick="(display('8'))" value="8">
+				<input type="button" class="number" onclick="(display('7'))" value="7">
+				<input type="button" id="multiply" onclick="(display('*'))" value="*">
+					
+				</div>
+
+				<div class="col1">
+				<input type="button" class="number" onclick="(display('6'))" value="6">
+				<input type="button" class="number" onclick="(display('5'))" value="5">
+				<input type="button" class="number" onclick="(display('4'))" value="4">
+				<input type="button" id="sub" onclick="(display('-'))" value="-">
+				
+				</div>
+				<div class="col1">
+				<input type="button" class="number" onclick="(display('3'))" value="3">
+				<input type="button" class="number" onclick="(display('2'))" value="2">
+				<input type="button" class="number" onclick="(display('1'))" value="1">
+				<input type="button" id="add" onclick="(display('+'))" value="+">
+				
+				</div>
+				<div class="col1">
+					
+				<input type="button" class="number" onclick="(display('.'))" value=".">
+				<input type="button" id="division" onclick="(display('/'))" value="/">
+				<input type="button" class="number" onclick="(display('0'))" value="0">
+				<input type="button" id="equals" onclick="calculate()" value="=">
+				
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<script>
+	
+	var operands=[];
+	var operator=[];
+	var answer;
+	var displayNumber;
+	function display(number){
+		
+		if(number==='+' || number==='-' || number==='*' || number==='/'){
+			document.getElementById('show').value="";
+			operands.push(Number(displayNumber));
+			console.log(number);
+			operator.push(number);
+			displayNumber="";
+		}else{
+			if(displayNumber===undefined){
+				displayNumber=document.getElementById('show').value;
+			}
+			displayNumber+=number;
+			document.getElementById('show').value=displayNumber;
+			console.log(number);
+
+		}
+		
+	}
+	function calculate(){
+		operands.push(Number(document.getElementById('show').value));
+		for(let i=0;i<operands.length-1;i++){
+		
+				var leftElement=operands[i];
+				var rightElement=operands[i+1];
+				var operation=operator[i];
+				var answer;
+				console.log("left "+leftElement);
+				console.log("right "+rightElement);
+				console.log("operation "+operation);
+
+				switch(operation){
+				case '+':{
+					displayNumber=leftElement+rightElement;
+					displayFinalResult();
+					break;
+				}
+				case '-':{
+					displayNumber=leftElement-rightElement;
+					displayFinalResult();
+					break;
+				}
+				case '*':{
+					displayNumber=leftElement*rightElement;
+					displayFinalResult();
+					break;
+				}
+				case '/':{
+					displayNumber=leftElement/rightElement;
+					displayFinalResult();
+					break;
+				}
+			}
+		}
+			
+		
+	}
+	
+		const addition=document.getElementById("add");
+		const subraction=document.getElementById("sub");
+		const multiply=document.getElementById("multiply");
+		const division=document.getElementById("division");
+		
+		addition.addEventListener("click",function(){
+			console.log("add");
+			this.style.backgroundColor="#F77604";
+			multiply.style.backgroundColor="#858585";
+			division.style.backgroundColor="#858585";
+			subraction.style.backgroundColor="#858585";
+
+		});
+		
+		subraction.addEventListener("click",function(){
+			console.log("sub");
+			this.style.backgroundColor="#F77604";
+			multiply.style.backgroundColor="#858585";
+			division.style.backgroundColor="#858585";
+			addition.style.backgroundColor="#858585";
+
+		});
+		
+		multiply.addEventListener("click",function(){
+			console.log("mul");
+			this.style.backgroundColor="#F77604";
+			subraction.style.backgroundColor="#858585";
+			division.style.backgroundColor="#858585";
+			addition.style.backgroundColor="#858585";
+
+		});
+		
+		division.addEventListener("click",function(){
+			this.style.backgroundColor="#F77604";
+			subraction.style.backgroundColor="#858585";
+			multiply.style.backgroundColor="#858585";
+			addition.style.backgroundColor="#858585";
+
+		});
+		
+		const numbers=document.getElementsByClassName("number");
+		for(let number of numbers){
+			console.log("num");
+			this.addEventListener("click",function(){
+				division.style.backgroundColor="#858585";
+				subraction.style.backgroundColor="#858585";
+				multiply.style.backgroundColor="#858585";
+				addition.style.backgroundColor="#858585";
+
+			});
+		}
+		
+		const clear=document.getElementById("clear");
+		this.addEventListener("click",function(){
+			console.log("clear");
+				division.style.backgroundColor="#858585";
+				subraction.style.backgroundColor="#858585";
+				multiply.style.backgroundColor="#858585";
+				addition.style.backgroundColor="#858585";
+
+			});
+				
+		
+	
+	
+	function clearAll(){
+		document.getElementById('show').value="";
+		clearArray();
+		displayNumber="";
+	}
+	function clearArray(){
+		operands=[];
+		operator=[];
+	}
+	function displayFinalResult(){
+		document.getElementById('show').value=displayNumber;
+		console.log("answer "+displayNumber);
+		clearArray();
+	}
+	
+	</script>
+</body>
+</html>
