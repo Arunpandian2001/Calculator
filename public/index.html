@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-	<div class="page">
+<div class="page">
 		<div class="container">
 			<div class="display">
 				<input type="text" placeholder="0" readonly id="show" name="show">
@@ -21,7 +21,7 @@
 				<input type="button" class="number" onclick="(display('9'))" value="9">
 				<input type="button" class="number" onclick="(display('8'))" value="8">
 				<input type="button" class="number" onclick="(display('7'))" value="7">
-				<input type="button" id="multiply" onclick="(display('*'))" value="*">
+				<input type="button" id="multiply" onclick="(setOperand('*'))" value="*">
 					
 				</div>
 
@@ -29,20 +29,20 @@
 				<input type="button" class="number" onclick="(display('6'))" value="6">
 				<input type="button" class="number" onclick="(display('5'))" value="5">
 				<input type="button" class="number" onclick="(display('4'))" value="4">
-				<input type="button" id="sub" onclick="(display('-'))" value="-">
+				<input type="button" id="sub" onclick="(setOperand('-'))" value="-">
 				
 				</div>
 				<div class="col1">
 				<input type="button" class="number" onclick="(display('3'))" value="3">
 				<input type="button" class="number" onclick="(display('2'))" value="2">
 				<input type="button" class="number" onclick="(display('1'))" value="1">
-				<input type="button" id="add" onclick="(display('+'))" value="+">
+				<input type="button" id="add" onclick="(setOperand('+'))" value="+">
 				
 				</div>
 				<div class="col1">
 					
 				<input type="button" class="number" onclick="(display('.'))" value=".">
-				<input type="button" id="division" onclick="(display('/'))" value="/">
+				<input type="button" id="division" onclick="(setOperand('/'))" value="/">
 				<input type="button" class="number" onclick="(display('0'))" value="0">
 				<input type="button" id="equals" onclick="calculate()" value="=">
 				
@@ -52,150 +52,128 @@
 
 		</div>
 	</div>
-	<script>
+<script type="text/javascript">
+
+
+	var operands = [];
+	var operations = [];
+	var component;
+
+	function clearAll() {
+		operands = [];
+		operations = [];
+		document.getElementById("show").value = "";
+
+		if (component)
+			removeHighLightOnClick();
+	}
+
+	function display(number) {
+		document.getElementById("show").value += number;
+		if (component) {
+			removeHighLightOnClick();
+			component = undefined;
+		}
+	}
 	
-	var operands=[];
-	var operator=[];
-	var answer;
-	var displayNumber;
-	function display(number){
+
+	function setOperand(operator) {
+		var prefixOperand = document.getElementById("show").value;
+
+		if (prefixOperand == "") {
+			if (operator == "-") 
+				document.getElementById("show").value = "-";
+
+		}
+		else{
+			operations.push(operator);
+			operands.push(prefixOperand);
+			document.getElementById("show").value = "";
+			highlightOperator();
+		}
+	}
+	
+
+
+	function calculate() {
+		var suffixOperand = document.getElementById("show").value;
+
+		if (suffixOperand == "" && operands[0] == undefined) {
+			document.getElementById("show").value = "";
+			return;
+		}
+		if (suffixOperand != "" && operands[0] == undefined) {
+			document.getElementById("show").value = operand2;
+			return;
+		}
+		operands.push(suffixOperand);
+		arithmaticSolving();
+	}
+
+	function arithmaticSolving() {
 		
-		if(number==='+' || number==='-' || number==='*' || number==='/'){
-			document.getElementById('show').value="";
-			operands.push(Number(displayNumber));
-			console.log(number);
-			operator.push(number);
-			displayNumber="";
-		}else{
-			if(displayNumber===undefined){
-				displayNumber=document.getElementById('show').value;
+		let currentOperator = operations[0];
+		var answer;
+		switch (currentOperator) {
+			case "+": {
+				answer = Number(operands[0]) + Number(operands[1]);
+				break;
 			}
-			displayNumber+=number;
-			document.getElementById('show').value=displayNumber;
-			console.log(number);
-
-		}
-		
-	}
-	function calculate(){
-		operands.push(Number(document.getElementById('show').value));
-		for(let i=0;i<operands.length-1;i++){
-		
-				var leftElement=operands[i];
-				var rightElement=operands[i+1];
-				var operation=operator[i];
-				var answer;
-				console.log("left "+leftElement);
-				console.log("right "+rightElement);
-				console.log("operation "+operation);
-
-				switch(operation){
-				case '+':{
-					displayNumber=leftElement+rightElement;
-					displayFinalResult();
-					break;
-				}
-				case '-':{
-					displayNumber=leftElement-rightElement;
-					displayFinalResult();
-					break;
-				}
-				case '*':{
-					displayNumber=leftElement*rightElement;
-					displayFinalResult();
-					break;
-				}
-				case '/':{
-					displayNumber=leftElement/rightElement;
-					displayFinalResult();
-					break;
-				}
+			case "-": {
+				answer = Number(operands[0]) - Number(operands[1]);
+				break;
+			}
+			case "*": {
+				answer = Number(operands[0]) * Number(operands[1]);
+				break;
+			}
+			case "/": {
+				answer = Number(operands[0]) / Number(operands[1]);
+				break;
 			}
 		}
-			
-		
+
+		document.getElementById("show").value = answer;
+		operands = [];
+		operations = [];
 	}
-	
-		const addition=document.getElementById("add");
-		const subraction=document.getElementById("sub");
-		const multiply=document.getElementById("multiply");
-		const division=document.getElementById("division");
-		
-		addition.addEventListener("click",function(){
-			console.log("add");
-			this.style.backgroundColor="#F77604";
-			multiply.style.backgroundColor="#858585";
-			division.style.backgroundColor="#858585";
-			subraction.style.backgroundColor="#858585";
 
-		});
-		
-		subraction.addEventListener("click",function(){
-			console.log("sub");
-			this.style.backgroundColor="#F77604";
-			multiply.style.backgroundColor="#858585";
-			division.style.backgroundColor="#858585";
-			addition.style.backgroundColor="#858585";
+	function highlightOperator() {
+		var operator = operations[0];
 
-		});
-		
-		multiply.addEventListener("click",function(){
-			console.log("mul");
-			this.style.backgroundColor="#F77604";
-			subraction.style.backgroundColor="#858585";
-			division.style.backgroundColor="#858585";
-			addition.style.backgroundColor="#858585";
-
-		});
-		
-		division.addEventListener("click",function(){
-			this.style.backgroundColor="#F77604";
-			subraction.style.backgroundColor="#858585";
-			multiply.style.backgroundColor="#858585";
-			addition.style.backgroundColor="#858585";
-
-		});
-		
-		const numbers=document.getElementsByClassName("number");
-		for(let number of numbers){
-			console.log("num");
-			this.addEventListener("click",function(){
-				division.style.backgroundColor="#858585";
-				subraction.style.backgroundColor="#858585";
-				multiply.style.backgroundColor="#858585";
-				addition.style.backgroundColor="#858585";
-
-			});
+		switch (operator) {
+			case "+": {
+				component = document.getElementById("add");
+				component.addEventListener("click", highLightOnClick());
+				break;
+			}
+			case "-": {
+				component = document.getElementById("sub");
+				component.addEventListener("click", highLightOnClick());
+				break;
+			}
+			case "*": {
+				component = document.getElementById("multiply");
+				component.addEventListener("click", highLightOnClick());
+				break;
+			}
+			case "/": {
+				component = document.getElementById("division");
+				component.addEventListener("click", highLightOnClick());
+				break;
+			}
 		}
-		
-		const clear=document.getElementById("clear");
-		this.addEventListener("click",function(){
-			console.log("clear");
-				division.style.backgroundColor="#858585";
-				subraction.style.backgroundColor="#858585";
-				multiply.style.backgroundColor="#858585";
-				addition.style.backgroundColor="#858585";
+	}
+	
+	function removeHighLightOnClick() {
+		component.style.backgroundColor = "#F56C57";
+	}
 
-			});
-				
-		
-	
-	
-	function clearAll(){
-		document.getElementById('show').value="";
-		clearArray();
-		displayNumber="";
-	}
-	function clearArray(){
-		operands=[];
-		operator=[];
-	}
-	function displayFinalResult(){
-		document.getElementById('show').value=displayNumber;
-		console.log("answer "+displayNumber);
-		clearArray();
+	function highLightOnClick() {
+		element.style.backgroundColor = "#F77604";
 	}
 	
-	</script>
+</script>
+
 </body>
 </html>
